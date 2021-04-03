@@ -2,7 +2,7 @@ import map from 'lodash/fp/map'
 import flatMap from 'lodash/fp/flatMap'
 import fromPairs from 'lodash/fp/fromPairs'
 import flow from 'lodash/fp/flow'
-import { Asset, AccountAsset, RegisteredAccountAsset } from '@sora-substrate/util'
+import { KnownAssets, KnownSymbols, Asset, AccountAsset, RegisteredAccountAsset } from '@sora-substrate/util'
 import { api } from '@soramitsu/soraneo-wallet-web'
 
 import { isXorAccountAsset, findAssetInCollection } from '@/utils'
@@ -32,11 +32,10 @@ const getters = {
   assets (state) {
     return state.assets
   },
-  xorAsset (state) {
-    return api.accountAssets.find(a => isXorAccountAsset(a)) || {}
-  },
-  xorBalance (state, getters) {
-    return getters.xorAsset.balance || 0
+  tokenXOR (state, getters, rootState, rootGetters) {
+    const token = KnownAssets.get(KnownSymbols.XOR)
+
+    return rootGetters['assets/getAssetDataByAddress'](token?.address)
   },
   registeredAssets (state) {
     return state.registeredAssets
@@ -123,7 +122,7 @@ const actions = {
     commit(types.GET_REGISTERED_ASSETS_REQUEST)
     try {
       const registeredAssets = await Promise.all((await api.bridge.getRegisteredAssets()).map(async item => {
-        const accountAsset = item as RegisteredAccountAsset
+        const accountAsset = { ...item, balance: '0', externalBalance: '0' } as RegisteredAccountAsset
         try {
           if (!accountAsset.externalAddress) {
             const externalAddress = await dispatch('web3/getEthTokenAddressByAssetId', { address: item.address }, { root: true })
