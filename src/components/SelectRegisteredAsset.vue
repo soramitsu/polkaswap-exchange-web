@@ -25,14 +25,14 @@
         <div class="asset-lists-container">
           <template v-if="hasFilteredAssets">
             <h3 class="network-label">
-              {{ isSoraToEthereum ? t('selectRegisteredAsset.search.networkLabelSora') : t('selectRegisteredAsset.search.networkLabelEthereum') }}
+              {{ isOutgoingDirection ? t('selectRegisteredAsset.search.networkLabelSora') : t('selectRegisteredAsset.search.networkLabelEthereum') }}
             </h3>
-            <div :class="assetListClasses(filteredAssets, !isSoraToEthereum)">
+            <div :class="assetListClasses(filteredAssets, !isOutgoingDirection)">
               <div v-for="asset in filteredAssets" @click="selectAsset(asset)" :key="asset.address" class="asset-item">
                 <s-col>
                   <s-row flex justify="start" align="middle">
                     <token-logo :token="asset" />
-                    <div class="asset-item__name">{{ getAssetName(asset, !isSoraToEthereum) }}</div>
+                    <div class="asset-item__name">{{ getAssetName(asset, !isOutgoingDirection) }}</div>
                   </s-row>
                 </s-col>
                 <div class="asset-item__balance-container">
@@ -128,7 +128,7 @@ export default class SelectRegisteredAsset extends Mixins(TranslationMixin, Dial
 
   @Getter accountAssets!: Array<AccountAsset> // Wallet store
 
-  @Getter('isSoraToEthereum', { namespace: 'bridge' }) isSoraToEthereum!: boolean
+  @Getter('isOutgoingDirection', { namespace: 'bridge' }) isOutgoingDirection!: boolean
   @Getter('registeredAssets', { namespace }) registeredAssets!: Array<RegisteredAccountAsset>
 
   @Action('getCustomAsset', { namespace }) getAsset
@@ -145,11 +145,11 @@ export default class SelectRegisteredAsset extends Mixins(TranslationMixin, Dial
   }
 
   get assetsList (): Array<AccountAsset | RegisteredAccountAsset> {
-    return this.getAssets(this.isSoraToEthereum ? this.accountAssets : this.registeredAssets)
+    return this.getAssets(this.isOutgoingDirection ? this.accountAssets : this.registeredAssets)
   }
 
   get addressSymbol (): string {
-    return this.isSoraToEthereum ? 'address' : 'externalAddress'
+    return this.isOutgoingDirection ? 'address' : 'externalAddress'
   }
 
   get filteredAssets (): Array<AccountAsset | RegisteredAccountAsset> {
@@ -162,7 +162,7 @@ export default class SelectRegisteredAsset extends Mixins(TranslationMixin, Dial
 
   formatBalance (asset?: AccountAsset | RegisteredAccountAsset): string {
     return formatAssetBalance(asset, {
-      internal: this.isSoraToEthereum,
+      internal: this.isOutgoingDirection,
       showZeroBalance: false,
       formattedZero: '-'
     })
@@ -170,7 +170,7 @@ export default class SelectRegisteredAsset extends Mixins(TranslationMixin, Dial
 
   getAssets (assets: Array<AccountAsset | RegisteredAccountAsset>): Array<AccountAsset | RegisteredAccountAsset> {
     const assetsList = this.asset ? assets?.filter(asset => asset.address !== this.asset.address) : assets
-    return this.isSoraToEthereum ? assetsList.filter(asset => !Number.isNaN(+asset?.balance?.transferable)) : assetsList
+    return this.isOutgoingDirection ? assetsList.filter(asset => !Number.isNaN(+asset?.balance?.transferable)) : assetsList
   }
 
   getFilteredAssets (assets: Array<AccountAsset | RegisteredAccountAsset>): Array<AccountAsset | RegisteredAccountAsset> {
@@ -216,7 +216,7 @@ export default class SelectRegisteredAsset extends Mixins(TranslationMixin, Dial
     }
     assetName += (asset.name || asset.symbol) + ' ('
     if (isMirrorAsset) {
-      assetName += this.isSoraToEthereum ? 's' : 'e'
+      assetName += this.isOutgoingDirection ? 's' : 'e'
     }
     assetName += asset.symbol + ')'
     return assetName
@@ -397,7 +397,7 @@ $select-asset-horizontal-spacing: $inner-spacing-big;
     overflow: auto;
   }
   &--ethereum {
-    @include ethereum-logo-styles;
+    @include extranet-logo-styles;
   }
   &__empty {
     display: flex;
