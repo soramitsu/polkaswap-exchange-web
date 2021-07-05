@@ -1,6 +1,6 @@
 import isNil from 'lodash/fp/isNil'
 import { Component, Mixins } from 'vue-property-decorator'
-import { Asset, AccountAsset, RegisteredAccountAsset } from '@sora-substrate/util'
+import { Asset, AccountAsset } from '@sora-substrate/util'
 
 import DialogMixin from '@/components/mixins/DialogMixin'
 
@@ -21,7 +21,7 @@ export default class SelectAsset extends Mixins(DialogMixin) {
       ? !+a.externalBalance
       : isNil(a.balance) || !+a.balance.transferable
 
-    return (a: AccountAsset | RegisteredAccountAsset, b: AccountAsset | RegisteredAccountAsset): number => {
+    return (a: AccountAsset, b: AccountAsset): number => {
       const emptyABalance = isEmpty(a)
       const emptyBBalance = isEmpty(b)
 
@@ -31,10 +31,10 @@ export default class SelectAsset extends Mixins(DialogMixin) {
     }
   }
 
-  public filterAssetsByQuery (assets: Array<AccountAsset | RegisteredAccountAsset>, isRegisteredAssets = false) {
+  public filterAssetsByQuery (assets: Array<AccountAsset>, isRegisteredAssets = false) {
     const addressField = isRegisteredAssets ? 'externalAddress' : 'address'
 
-    return (query: string): Array<AccountAsset | RegisteredAccountAsset> => {
+    return (query: string): Array<AccountAsset> => {
       if (!query) return assets
 
       const search = query.toLowerCase().trim()
@@ -54,12 +54,12 @@ export default class SelectAsset extends Mixins(DialogMixin) {
     accountAssetsOnly = false,
     excludeAsset
   }: {
-    assets: Array<Asset | RegisteredAccountAsset>;
+    assets: Array<Asset>;
     accountAssetsAddressTable: any;
     notNullBalanceOnly?: boolean;
     accountAssetsOnly?: boolean;
     excludeAsset?: Asset | AccountAsset;
-  }): Array<AccountAsset | RegisteredAccountAsset> {
+  }): Array<AccountAsset> {
     return assets.reduce((result: Array<AccountAsset>, item) => {
       if (!item || (excludeAsset && item.address === excludeAsset.address)) return result
 

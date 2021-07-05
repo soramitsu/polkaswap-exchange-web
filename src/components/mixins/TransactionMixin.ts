@@ -5,7 +5,6 @@ import findLast from 'lodash/fp/findLast'
 import { Action } from 'vuex-class'
 
 import { formatAddress, delay } from '@/utils'
-import { groupRewardsByAssetsList } from '@/utils/rewards'
 import TranslationMixin from './TranslationMixin'
 import LoadingMixin from './LoadingMixin'
 import NumberFormatterMixin from './NumberFormatterMixin'
@@ -32,11 +31,6 @@ export default class TransactionMixin extends Mixins(TranslationMixin, LoadingMi
     }
     if ([Operation.AddLiquidity, Operation.CreatePair, Operation.RemoveLiquidity, Operation.Swap].includes(value.type)) {
       params.amount2 = params.amount2 ? this.formatStringValue(params.amount2) : ''
-    }
-    if (value.type === Operation.ClaimRewards) {
-      params.rewards = groupRewardsByAssetsList(params.rewards)
-        .map(({ amount, symbol }) => `${amount} ${symbol}`)
-        .join(` ${this.t('rewards.andText')} `)
     }
     return this.t(`operations.${value.status}.${value.type}`, params)
   }

@@ -2,7 +2,6 @@ import { en as walletEn } from '@soramitsu/soraneo-wallet-web'
 import { Operation, TransactionStatus, RewardingEvents } from '@sora-substrate/util'
 
 import { PageNames, NetworkTypes } from '../consts'
-import { EvmNetworkType } from '../utils/web3-util'
 
 export default {
   // Wallet project keys
@@ -20,7 +19,6 @@ export default {
   connectedText: 'Connected',
   connectWalletTextTooltip: 'Connect to @:soraText Network with polkadot{.js}',
   selectNodeText: 'Select node',
-  bridgeText: 'Bridge',
   comingSoonText: 'Coming Soon',
   disclaimer: 'Disclaimer: This website is maintained by the @:soraText community. Before continuing to use this website, please review the @:polkaswapFaqLink and documentation, which includes a detailed explanation on how Polkaswap works, as well as the @:footerMenu.memorandum, and @:(footerMenu.privacy). These documents are crucial to a secure and positive user experience. By using Polkaswap, you acknowledge that you have read and understand these documents. You also acknowledge the following: 1) your sole responsibility for compliance with all laws that may apply to your particular use of Polkaswap in your legal jurisdiction; 2) your understanding that the current version of Polkaswap is an alpha version: it has not been fully tested, and some functions may not perform as designed; and 3) your understanding and voluntary acceptance of the risks involved in using Polkaswap, including, but not limited to, the risk of losing tokens. Once more, please do not continue without reading the FAQ, <span>@:footerMenu.memorandum</span><a href="@:helpDialog.termsOfServiceLink" target="_blank" rel="nofollow noopener" class="link link--mobile">@:footerMenu.memorandum</a>, and <span>@:footerMenu.privacy</span><a href="@:helpDialog.privacyPolicyLink" target="_blank" rel="nofollow noopener" class="link link--mobile">@:footerMenu.privacy</a>!',
   polkaswapFaqLink: '<a class="link" href="https://wiki.sora.org/polkaswap/polkaswap-faq" target="_blank" rel="nofollow noopener" title="Polkaswap FAQ">Polkaswap FAQ</a>',
@@ -39,37 +37,22 @@ export default {
   nameText: 'Name',
   addressText: 'Address',
   pageTitle: {
-    [PageNames.Swap]: 'Swap',
+    [PageNames.Exchange]: 'Exchange',
+    [PageNames.Send]: 'Send',
     [PageNames.Pool]: 'Pool',
-    [PageNames.Bridge]: '@:bridgeText',
-    [PageNames.About]: 'About',
-    [PageNames.Stats]: 'Stats',
-    [PageNames.Support]: 'Support',
     [PageNames.Wallet]: 'Wallet',
     [PageNames.CreatePair]: 'Create Pair',
     [PageNames.AddLiquidity]: 'Add Liquidity',
     [PageNames.AddLiquidityId]: 'Add Liquidity',
     [PageNames.RemoveLiquidity]: 'Remove Liquidity',
-    [PageNames.PageNotFound]: 'Page Not Found'
+    [PageNames.KYC]: 'KYC'
   },
   mainMenu: {
-    [PageNames.Swap]: 'Swap',
+    [PageNames.Exchange]: 'Exchange',
+    [PageNames.Send]: 'Send',
     [PageNames.Pool]: 'Pool',
-    [PageNames.Bridge]: '@:bridgeText',
-    [PageNames.Farming]: 'Farming',
     [PageNames.Wallet]: 'Account',
-    [PageNames.Rewards]: 'Rewards',
-    [PageNames.About]: 'About',
-    [PageNames.Stats]: 'Stats',
-    [PageNames.Support]: 'Support',
-    [PageNames.CreatePair]: 'Create Pair'
-  },
-  social: {
-    twitter: 'Twitter',
-    telegram: 'Telegram',
-    medium: 'Medium',
-    reddit: 'Reddit',
-    github: 'GitHub'
+    [PageNames.KYC]: 'KYC'
   },
   footerMenu: {
     faucet: 'Faucet',
@@ -168,68 +151,18 @@ export default {
       [Operation.ClaimRewards]: 'Failed to claim rewards {rewards}'
     }
   },
-  pageNotFound: {
-    title: 'Page not found',
-    body: '404'
-  },
   metamask: 'MetaMask',
   sora: {
     [NetworkTypes.Devnet]: '@:soraText Devnet',
     [NetworkTypes.Testnet]: '@:soraText Testnet',
     [NetworkTypes.Mainnet]: '@:soraText Mainnet'
   },
-  evm: {
-    [EvmNetworkType.Mainnet]: 'Ethereum Mainnet',
-    [EvmNetworkType.Ropsten]: 'Ethereum Ropsten',
-    [EvmNetworkType.Rinkeby]: 'Ethereum Rinkeby',
-    [EvmNetworkType.Kovan]: 'Ethereum Kovan',
-    [EvmNetworkType.Goerli]: 'Ethereum Goerli',
-    [EvmNetworkType.Private]: 'Volta Testnet',
-    [EvmNetworkType.EWC]: 'Energy Web Chain'
-  },
   providers: {
     metamask: '@:metamask'
   },
-  about: {
-    title: 'The DEX for the Interoperable Future.',
-    description: 'Cross-chain exchange of assets, simple creation and listing of new assets, and the easiest swaps ever. The interoperable future of Polkadot is here and we are at the forefront!',
-    trading: {
-      title: 'Faster Trading',
-      first: 'Polkaswap is a non-custodial, cross-chain AMM DEX protocol for swapping tokens based on Polkadot and Kusama relay chains, Polkadot and Kusama parachains, and blockchains directly connected via bridges.',
-      second: 'Polkaswap removes trusted intermediaries and provides the opportunity for faster trading',
-      third: 'Polkaswap is a community project and devs collaborate on the open source code using the'
-    },
-    liquidity: {
-      title: 'Boundless Liquidity',
-      first: 'Polkaswap combines multiple liquidity sources under a common liquidity aggregation algorithm, operating completely on-chain, in a trustless and decentralized way.',
-      second: 'When traders call the swap function, the liquidity aggregation algorithm will fill orders using the best offers across all liquidity sources. Liquidity sources can be other DEXs, order books, or other API-driven sources.',
-      third: 'Because Polkaswap is an open-source project, anyone can add more liquidity sources by making contributions to the Polkaswap codebase.'
-    },
-    swap: {
-      title: 'Swap Any Token',
-      first: 'Go beyond the limits of current DEXs by adding tokens from the Polkadot ecosystem as well as other blockchains.',
-      second: 'Create, list and trade your own tokens on the SORA network.',
-      third: 'Our core infrastructure uses Parity Substrate, which is more scalable than Ethereum, and does not use expensive mining for consensus.'
-    },
-    pswap: {
-      title: 'PSWAP Tokens',
-      first: 'PSWAP was created by community governance by voting on its release. It is a utility and governance token used to reward liquidity providers on Polkaswap. Unlike most other reward tokens, PSWAP is burned with transactions and decreases in supply over time.',
-      second: 'The {percent}% fee for every swap on the Polkaswap DEX is used to buy back PSWAP tokens, which are then burned. At first, 90% of burned PSWAP tokens are reminted to allocate to liquidity providers, but with time this percentage will decrease to 35% after 4 years.'
-    },
-    links: {
-      first: {
-        title: 'Become a SORA Validator',
-        desc: 'Secure the future of the SORA network and decentralized apps like Polkaswap, and earn rewards along the way by becoming a SORA validator.'
-      },
-      second: {
-        title: 'Connect a Chain to SORA',
-        desc: 'Grow the decentralized world economy by connecting more chains to SORA and Polkaswap using the HASHI bridge protocol.'
-      }
-    },
-    network: 'Polkaswap is built on the SORA Network, focusing on interoperability to connect the rest of the crypto ecosystem to Polkadot.'
-  },
   exchange: {
-    [PageNames.Swap]: 'Swap',
+    [PageNames.Exchange]: 'Exchange',
+    [PageNames.Send]: 'Send',
     [PageNames.Pool]: 'Pool',
     balance: 'Balance',
     insufficientBalance: '@:insufficientBalanceText',
@@ -273,114 +206,7 @@ export default {
     unknownAsset: 'Unknown asset',
     description: 'When you add liquidity, you are given pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time.'
   },
-  bridge: {
-    title: 'HASHI Bridge',
-    info: 'Convert tokens between the @:soraText and @:ethereumText networks.',
-    balance: 'Balance',
-    connectWallet: '@:connectWalletText',
-    connected: '@:connectedText',
-    changeAccount: '@:changeAccountText',
-    changeNetwork: '@:changeNetworkText',
-    next: 'Next',
-    connectWallets: 'Connect wallets to view respective transaction history.',
-    soraNetworkFee: '@:soraText Network Fee',
-    ethereumNetworkFee: '@:ethereumText Network Fee',
-    tooltipValue: '@:comingSoonText',
-    total: 'Total',
-    viewHistory: 'View transactions history',
-    transactionSubmitted: 'Transaction submitted',
-    transactionMessage: '{assetA} for {assetB}',
-    notRegisteredAsset: 'Asset {assetSymbol} is not registered',
-    selectNetwork: 'Select network',
-    networkInfo: 'Bridge @:soraText Network with:',
-    ethereum: '@:ethereumText',
-    energy: '@:evm.EWC'
-  },
-  selectRegisteredAsset: {
-    title: 'Select a token',
-    search: {
-      title: 'Tokens',
-      placeholder: 'Filter by Asset ID, Name or Ticker Symbol',
-      networkLabelSora: '@:soraText network tokens',
-      networkLabelEthereum: '@:ethereumText network mirror tokens',
-      emptyListMessage: 'No results'
-    },
-    customAsset: {
-      title: 'Custom',
-      customInfo: 'Important! Custom tokens must be registered in @:(soraText).',
-      registerToken: 'Register token',
-      addressPlaceholder: 'Asset ID',
-      symbolPlaceholder: 'Token symbol',
-      empty: 'No tokens found',
-      alreadyAttached: 'Token was already attached'
-    }
-  },
-  confirmBridgeTransactionDialog: {
-    confirmTransaction: 'Confirm transaction',
-    insufficientBalance: '@:insufficientBalanceText',
-    changeNetwork: '@:changeNetworkText',
-    metamask: '@:metamask',
-    sora: '@:soraText',
-    confirm: '@:confirmTransactionText',
-    buttonConfirm: '@:confirmText'
-  },
-  bridgeTransaction: {
-    viewHistory: 'View transaction in transactions history',
-    details: '{from} for {to}',
-    for: ' for ',
-    steps: {
-      step: '{step} of 2',
-      step1: '1st',
-      step2: '2nd'
-    },
-    status: {
-      pending: '{step} transactions pending...',
-      failed: '{step} transactions failed. @:(retryText).',
-      confirm: 'Confirm 2nd of 2 transactions...',
-      complete: 'Complete',
-      convertionComplete: 'Conversion complete'
-    },
-    statuses: {
-      waiting: 'Waiting',
-      ready: 'Ready',
-      pending: 'Pending',
-      frozen: 'Frozen',
-      failed: 'Transaction failed',
-      done: 'Complete',
-      waitingForConfirmation: 'Waiting for confirmation...'
-    },
-    wait30Block: 'Please wait 30 block confirmations',
-    viewInSorascan: 'View in SORAScan',
-    viewInEtherscan: 'View in Etherscan',
-    networkTitle: '{network} transaction',
-    transactionHash: 'Transaction hash',
-    networkInfo: {
-      status: 'Status',
-      date: 'Date',
-      amount: 'Amount',
-      transactionFee: 'Transaction Fee',
-      total: 'Total'
-    },
-    successCopy: 'Transaction hash is copied to the clipboard',
-    ethereum: '@:ethereumText',
-    sora: '@:soraText',
-    pending: '<span class="network-title">{network}</span> transaction pending...',
-    retry: '@:retryText',
-    metamask: '@:metamask',
-    confirm: '@:confirmTransactionText',
-    newTransaction: 'Create new transaction',
-    changeNetwork: '@:changeNetworkText',
-    connectWallet: '@:connectWalletText'
-  },
   months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-  bridgeHistory: {
-    title: 'History',
-    showHistory: 'Show history',
-    clearHistory: 'Clear history',
-    empty: 'Your transactions will appear here.',
-    filterPlaceholder: 'Filter by Asset ID or Ticker Symbol',
-    restoreHistory: 'Restore history'
-  },
   selectToken: {
     title: 'Select a token',
     searchPlaceholder: 'Filter by Asset ID, Name or Ticker Symbol',
@@ -472,62 +298,5 @@ export default {
   resultDialog: {
     title: 'Transaction submitted',
     ok: 'OK'
-  },
-  rewards: {
-    title: 'Claim Rewards',
-    changeAccount: '@:changeAccountText',
-    connected: '@:connectedText',
-    networkFee: '@:networkFeeText',
-    networkFeeTooltip: '@:networkFeeTooltipText',
-    andText: 'and',
-    vested: 'vested',
-    claiming: {
-      pending: 'Claiming...',
-      success: 'Claimed successfully'
-    },
-    transactions: {
-      confimation: 'Confirm {order} of {total} transactions...',
-      success: 'You will receive your rewards shortly',
-      failed: '{order} of {total} transactions failed. @:retryText'
-    },
-    signing: {
-      extension: 'polkadot{.js} browser extension',
-      accounts: 'your @:soraText and @:ethereumText accounts respectively'
-    },
-    hint: {
-      connectExternalAccount: 'Connect an @:ethereumText account to check for available PSWAP and VAL rewards.',
-      connectAccounts: 'To claim your PSWAP and VAL rewards you need to connect both your @:soraText and @:ethereumText accounts.',
-      connectAnotherAccount: 'Connect another @:ethereumText account to check for available PSWAP and VAL rewards.',
-      howToClaimRewards: 'To claim your {symbols} rewards you need to sign {count} {transactions} in {destination}. Rewards will be deposited to your @:soraText account.'
-    },
-    action: {
-      connectWallet: '@:connectWalletText',
-      connectExternalWallet: 'Connect @:ethereumText account',
-      signAndClaim: 'Sign and claim',
-      pendingInternal: '@:soraText transaction pending...',
-      pendingExternal: '@:ethereumText transaction pending...',
-      retry: '@:retryText',
-      checkRewards: 'Check',
-      insufficientBalance: '@:insufficientBalanceText'
-    },
-    notification: {
-      empty: 'No available claims for this account'
-    },
-    events: {
-      [RewardingEvents.XorErc20]: 'XOR ERC-20',
-      [RewardingEvents.SoraFarmHarvest]: '@:(soraText).farm harvest',
-      [RewardingEvents.NftAirdrop]: 'NFT Airdrop',
-      [RewardingEvents.LiquidityProvision]: 'Fees gained from liquidity provision',
-      [RewardingEvents.BuyOnBondingCurve]: 'buying from the TBC'
-    }
-  },
-  provider: {
-    default: '@:ethereumText provider',
-    metamask: '@:metamask',
-    messages: {
-      checkExtension: '{name} extension is busy, please check it',
-      extensionLogin: 'Please login to your {name} extension',
-      installExtension: '{name} extension is not found. Please install it!'
-    }
   }
 }

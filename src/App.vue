@@ -55,19 +55,6 @@
           active-hover-color="transparent"
         >
           <s-menu-item-group>
-            <li v-for="item in SocialNetworkLinks" :key="item.title">
-              <sidebar-item-content
-                :icon="item.icon"
-                :title="t(`social.${item.title}`)"
-                :href="item.href"
-                tag="a"
-                target="_blank"
-                rel="nofollow noopener"
-                class="el-menu-item menu-item--small"
-              />
-            </li>
-          </s-menu-item-group>
-          <s-menu-item-group>
             <li v-if="faucetUrl">
               <sidebar-item-content
                 :icon="FaucetLink.icon"
@@ -79,7 +66,7 @@
                 class="el-menu-item menu-item--small"
               />
             </li>
-            <li class="menu-link-container">
+            <li v-if="false /* TODO: [caripay] check */" class="menu-link-container">
               <sidebar-item-content
                 :title="t('footerMenu.memorandum')"
                 :href="t('helpDialog.termsOfServiceLink')"
@@ -89,7 +76,7 @@
                 class="el-menu-item menu-item--small menu-item--general-link"
               />
             </li>
-            <li class="menu-link-container">
+            <li v-if="false /* TODO: [caripay] check */" class="menu-link-container">
               <sidebar-item-content
                 :title="t('footerMenu.privacy')"
                 :href="t('helpDialog.privacyPolicyLink')"
@@ -99,22 +86,15 @@
                 class="el-menu-item menu-item--small menu-item--general-link"
               />
             </li>
-            <!-- <sidebar-item-content
-              :title="t('footerMenu.help')"
-              icon="notifications-info-24"
-              tag="li"
-              class="el-menu-item menu-item--small"
-              @click.native="openHelpDialog"
-            /> -->
           </s-menu-item-group>
         </s-menu>
       </aside>
       <div class="app-body">
         <div class="app-content">
           <router-view :parent-loading="loading || !nodeIsConnected" />
-          <p class="app-disclaimer" :class="isAboutPage ? 'about-disclaimer' : ''" v-html="t('disclaimer')" />
+          <p v-if="false /* TODO: [caripay] check */" class="app-disclaimer" v-html="t('disclaimer')" />
         </div>
-        <footer class="app-footer" :class="isAboutPage ? 'about-footer' : ''">
+        <footer class="app-footer">
           <div class="sora-logo">
             <span class="sora-logo__title">{{ t('poweredBy') }}</span>
             <a class="sora-logo__image" href="https://sora.org" title="Sora" target="_blank" rel="nofollow noopener" />
@@ -134,7 +114,7 @@ import { Action, Getter, State } from 'vuex-class'
 import { WALLET_CONSTS, WalletAvatar, updateAccountAssetsSubscription } from '@soramitsu/soraneo-wallet-web'
 import { KnownSymbols, FPNumber } from '@sora-substrate/util'
 
-import { PageNames, BridgeChildPages, SidebarMenuGroups, SocialNetworkLinks, FaucetLink, Components, LogoSize } from '@/consts'
+import { PageNames, SidebarMenuGroups, FaucetLink, Components, LogoSize } from '@/consts'
 
 import TransactionMixin from '@/components/mixins/TransactionMixin'
 import NodeErrorMixin from '@/components/mixins/NodeErrorMixin'
@@ -160,7 +140,6 @@ export default class App extends Mixins(TransactionMixin, NodeErrorMixin) {
   readonly nodesFeatureEnabled = true
 
   readonly SidebarMenuGroups = SidebarMenuGroups
-  readonly SocialNetworkLinks = SocialNetworkLinks
   readonly FaucetLink = FaucetLink
   readonly PageNames = PageNames
 
@@ -191,9 +170,6 @@ export default class App extends Mixins(TransactionMixin, NodeErrorMixin) {
   @Action setDefaultNodes!: (nodes: any) => Promise<void>
   @Action connectToNode!: (options: ConnectToNodeOptions) => Promise<void>
   @Action setFaucetUrl!: (url: string) => void
-  @Action('setEvmSmartContracts', { namespace: 'web3' }) setEvmSmartContracts
-  @Action('setSubNetworks', { namespace: 'web3' }) setSubNetworks
-  @Action('setSmartContracts', { namespace: 'web3' }) setSmartContracts
 
   @Watch('firstReadyTransaction', { deep: true })
   private handleNotifyAboutTransaction (value): void {
@@ -224,8 +200,6 @@ export default class App extends Mixins(TransactionMixin, NodeErrorMixin) {
 
       await this.setSoraNetwork(data)
       await this.setDefaultNodes(data?.DEFAULT_NETWORKS)
-      await this.setSubNetworks(data.SUB_NETWORKS)
-      await this.setSmartContracts(data.SUB_NETWORKS)
 
       if (data.FAUCET_URL) {
         this.setFaucetUrl(data.FAUCET_URL)
@@ -253,10 +227,6 @@ export default class App extends Mixins(TransactionMixin, NodeErrorMixin) {
     }
   }
 
-  get isAboutPage (): boolean {
-    return this.$route.name === PageNames.About
-  }
-
   get accountInfo (): string {
     if (!this.isLoggedIn) {
       return this.t('connectWalletText')
@@ -267,9 +237,6 @@ export default class App extends Mixins(TransactionMixin, NodeErrorMixin) {
   getCurrentPath (): string {
     if (this.PoolChildPages.includes(router.currentRoute.name as PageNames)) {
       return PageNames.Pool
-    }
-    if (BridgeChildPages.includes(router.currentRoute.name as PageNames)) {
-      return PageNames.Bridge
     }
     return router.currentRoute.name as string
   }

@@ -1,5 +1,5 @@
 import debounce from 'lodash/debounce'
-import { Asset, AccountAsset, RegisteredAccountAsset, AccountLiquidity, KnownSymbols, FPNumber, CodecString, KnownAssets } from '@sora-substrate/util'
+import { Asset, AccountAsset, AccountLiquidity, KnownSymbols, FPNumber, CodecString, KnownAssets } from '@sora-substrate/util'
 import { connection, updateAccountAssetsSubscription } from '@soramitsu/soraneo-wallet-web'
 import storage from './storage'
 
@@ -17,23 +17,16 @@ export const formatAddress = (address: string, length = address.length / 2): str
   return `${address.slice(0, length / 2)}...${address.slice(-length / 2)}`
 }
 
-export const isXorAccountAsset = (asset: Asset | AccountAsset | RegisteredAccountAsset | AccountLiquidity): boolean => {
+export const isXorAccountAsset = (asset: Asset | AccountAsset | AccountLiquidity): boolean => {
   return asset ? asset.address === KnownAssets.get(KnownSymbols.XOR).address : false
-}
-
-export const isEthereumAddress = (address: string): boolean => {
-  const numberString = address.replace(/^0x/, '')
-  const number = parseInt(numberString, 16)
-
-  return number === 0
 }
 
 export const isMaxButtonAvailable = (
   areAssetsSelected: boolean,
-  asset: AccountAsset | RegisteredAccountAsset | AccountLiquidity,
+  asset: AccountAsset | AccountLiquidity,
   amount: string | number,
   fee: CodecString,
-  xorAsset: AccountAsset | RegisteredAccountAsset,
+  xorAsset: AccountAsset,
   parseAsLiquidity = false,
   isXorOutputSwap = false
 ): boolean => {
@@ -52,7 +45,7 @@ export const isMaxButtonAvailable = (
 }
 
 const getMaxBalance = (
-  asset: AccountAsset | RegisteredAccountAsset | AccountLiquidity,
+  asset: AccountAsset | AccountLiquidity,
   fee: CodecString,
   isExternalBalance = false,
   parseAsLiquidity = false
@@ -63,13 +56,7 @@ const getMaxBalance = (
 
   let fpResult = FPNumber.fromCodecValue(balance, asset.decimals)
 
-  if (
-    !asZeroValue(fee) &&
-    (
-      (!isExternalBalance && isXorAccountAsset(asset)) ||
-      (isExternalBalance && isEthereumAddress((asset as RegisteredAccountAsset).externalAddress))
-    )
-  ) {
+  if (!asZeroValue(fee) && (!isExternalBalance && isXorAccountAsset(asset))) {
     const fpFee = FPNumber.fromCodecValue(fee, asset.decimals)
     fpResult = fpResult.sub(fpFee)
   }
@@ -78,7 +65,7 @@ const getMaxBalance = (
 }
 
 export const getMaxValue = (
-  asset: AccountAsset | RegisteredAccountAsset,
+  asset: AccountAsset,
   fee: CodecString,
   isExternalBalance = false
 ): string => {
@@ -86,7 +73,7 @@ export const getMaxValue = (
 }
 
 export const hasInsufficientBalance = (
-  asset: AccountAsset | RegisteredAccountAsset,
+  asset: AccountAsset,
   amount: string | number,
   fee: CodecString,
   isExternalBalance = false
@@ -97,7 +84,7 @@ export const hasInsufficientBalance = (
   return FPNumber.lt(fpMaxBalance, fpAmount)
 }
 
-export const hasInsufficientXorForFee = (xorAsset: Nullable<AccountAsset | RegisteredAccountAsset>, fee: CodecString, isXorOutputSwap = false): boolean => {
+export const hasInsufficientXorForFee = (xorAsset: Nullable<AccountAsset>, fee: CodecString, isXorOutputSwap = false): boolean => {
   if (!xorAsset) return true
   if (asZeroValue(fee)) return false
 
@@ -158,12 +145,6 @@ export const formatAssetBalance = (asset: any, { internal = true, parseAsLiquidi
   if (!balance || (!showZeroBalance && asZeroValue(balance))) return formattedZero
 
   return FPNumber.fromCodecValue(balance, asset.decimals).toLocaleString()
-}
-
-export const findAssetInCollection = (asset, collection) => {
-  if (!Array.isArray(collection) || !asset?.address) return undefined
-
-  return collection.find(item => item.address === asset.address)
 }
 
 export const disconnectWallet = async (): Promise<void> => {

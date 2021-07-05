@@ -1,6 +1,6 @@
 <template>
   <s-form v-loading="parentLoading" class="container el-form--actions" :show-message="false">
-    <generic-page-header class="page-header--swap" :title="t('exchange.Swap')">
+    <generic-page-header class="page-header--swap" :title="t(`exchange.${isSendOnly ? PageNames.Send : PageNames.Exchange}`)">
       <status-action-badge>
         <template #label>{{ t('marketText') }}:</template>
         <template #value>{{ swapMarketAlgorithm }}</template>
@@ -150,6 +150,8 @@ const namespace = 'swap'
   }
 })
 export default class Swap extends Mixins(TranslationMixin, LoadingMixin, NumberFormatterMixin) {
+  readonly PageNames = PageNames
+
   @Getter nodeIsConnected!: boolean
   @Getter isLoggedIn!: boolean
   @Getter slippageTolerance!: string
@@ -166,6 +168,7 @@ export default class Swap extends Mixins(TranslationMixin, LoadingMixin, NumberF
   @Getter('swapLiquiditySource', { namespace }) liquiditySource!: LiquiditySourceTypes
   @Getter('pairLiquiditySourcesAvailable', { namespace }) pairLiquiditySourcesAvailable!: boolean
   @Getter('swapMarketAlgorithm', { namespace }) swapMarketAlgorithm!: string
+  @Getter('isSendOnly', { namespace }) isSendOnly!: boolean
 
   @Action('setTokenFromAddress', { namespace }) setTokenFromAddress!: (address?: string) => Promise<void>
   @Action('setTokenToAddress', { namespace }) setTokenToAddress!: (address?: string) => Promise<void>

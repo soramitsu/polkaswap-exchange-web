@@ -29,7 +29,8 @@ const types = flow(
     'SET_NETWORK_FEE',
     'SET_REWARDS',
     'GET_SWAP_CONFIRM',
-    'RESET'
+    'RESET',
+    'SET_ONLY_SEND'
   ]),
   map(x => [x, x]),
   fromPairs
@@ -50,6 +51,7 @@ interface SwapState {
   isAvailable: boolean;
   isAvailableChecking: boolean;
   rewards: Array<LPRewardsInfo>;
+  isSendOnly: boolean;
 }
 
 function initialState (): SwapState {
@@ -67,7 +69,8 @@ function initialState (): SwapState {
     isAvailable: false,
     isAvailableChecking: false,
     pairLiquiditySources: [],
-    rewards: []
+    rewards: [],
+    isSendOnly: false
   }
 }
 
@@ -123,6 +126,9 @@ const getters = {
   },
   isAvailableChecking (state: SwapState) {
     return state.isAvailableChecking
+  },
+  isSendOnly (state: SwapState) {
+    return state.isSendOnly
   }
 }
 
@@ -187,6 +193,9 @@ const mutations = {
   },
   [types.SET_NETWORK_FEE] (state: SwapState, networkFee: CodecString) {
     state.networkFee = networkFee
+  },
+  [types.SET_ONLY_SEND] (state: SwapState, value: boolean) {
+    state.isSendOnly = value
   }
 }
 
@@ -281,6 +290,9 @@ const actions = {
   updateSubscriptions ({ dispatch }) {
     dispatch('updateTokenFromSubscription')
     dispatch('updateTokenToSubscription')
+  },
+  setIsSendOnly ({ commit }, value: boolean) {
+    commit(types.SET_ONLY_SEND, value)
   }
 }
 

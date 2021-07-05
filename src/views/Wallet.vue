@@ -6,7 +6,6 @@
       @close="handleClose"
       @swap="handleSwap"
       @liquidity="handleLiquidity"
-      @bridge="handleBridge"
       @learn-more="openAboutNetworkDialog"
     />
     <about-network-dialog :visible.sync="showAboutNetworkDialog" />
@@ -36,7 +35,6 @@ export default class Wallet extends Mixins(TranslationMixin) {
 
   @Action('setTokenFromAddress', { namespace: 'swap' }) setSwapFromAsset!: (address?: string) => Promise<void>
   @Action('setTokenToAddress', { namespace: 'swap' }) setSwapToAsset!: (address?: string) => Promise<void>
-  @Action('setAssetAddress', { namespace: 'bridge' }) setBridgeAsset!: (address?: string) => Promise<void>
   @Action('setFirstTokenAddress', { namespace: 'addLiquidity' }) setAddliquidityAssetA!: (address?: string) => Promise<void>
   @Action('setSecondTokenAddress', { namespace: 'addLiquidity' }) setAddliquidityAssetB!: (address?: string) => Promise<void>
   @Action('setFirstTokenAddress', { namespace: 'createPair' }) setCreatePairAssetA!: (address?: string) => Promise<void>
@@ -51,7 +49,7 @@ export default class Wallet extends Mixins(TranslationMixin) {
   async handleSwap (asset: AccountAsset): Promise<void> {
     await this.setSwapFromAsset(asset.address)
     await this.setSwapToAsset()
-    router.push({ name: PageNames.Swap })
+    router.push({ name: PageNames.Exchange })
   }
 
   async handleLiquidity (asset: AccountAsset): Promise<void> {
@@ -71,11 +69,6 @@ export default class Wallet extends Mixins(TranslationMixin) {
     await this.setCreatePairAssetA(assetAAddress)
     await this.setCreatePairAssetB(assetBAddress)
     router.push({ name: PageNames.CreatePair, params })
-  }
-
-  async handleBridge (asset: AccountAsset): Promise<void> {
-    await this.setBridgeAsset(asset.address)
-    router.push({ name: PageNames.Bridge, params: { address: asset.address } })
   }
 
   openAboutNetworkDialog (): void {

@@ -189,27 +189,6 @@
   }
 }
 
-@mixin evm-logo-styles {
-  .token-logo {
-    // filter: grayscale(1);
-    // opacity: .5;
-  }
-}
-
-@mixin bridge-container {
-  width: $bridge-width;
-
-  .el-loading-mask {
-    border-radius: var(--s-border-radius-medium);
-  }
-}
-
-@mixin bridge-content {
-  min-height: 400px;
-  margin-top: $basic-spacing * 2;
-  width: 100%;
-}
-
 @mixin input-font-styles {
   height: var(--s-size-small);
   font-size: $s-font-size-input;
@@ -275,16 +254,6 @@
 @mixin next-button {
   width: 100%;
   letter-spacing: var(--s-letter-spacing-big);
-}
-
-@mixin bottom-button {
-  padding: 0;
-  width: $bridge-width;
-  @include button-styles;
-  &:active {
-    border: 1px solid var(--s-color-theme-accent);
-    color: var(--s-color-theme-accent);
-  }
 }
 
 @mixin empty-search {

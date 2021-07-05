@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
 
-import { PageNames, BridgeChildPages } from '@/consts'
+import { PageNames } from '@/consts'
 import store from '@/store'
 
 Vue.use(VueRouter)
@@ -12,12 +12,17 @@ export const lazyView = (name: string) => () => import(`@/views/${name}.vue`)
 const routes: Array<RouteConfig> = [
   {
     path: '/',
-    redirect: '/swap'
+    redirect: '/exchange'
   },
   {
-    path: '/swap',
-    name: PageNames.Swap,
-    component: lazyView(PageNames.Swap)
+    path: '/exchange',
+    name: PageNames.Exchange,
+    component: lazyView(PageNames.Exchange)
+  },
+  {
+    path: '/send',
+    name: PageNames.Send,
+    component: lazyView(PageNames.Exchange)
   },
   {
     path: '/pool',
@@ -25,31 +30,9 @@ const routes: Array<RouteConfig> = [
     component: lazyView(PageNames.Pool)
   },
   {
-    path: '/about',
-    name: PageNames.About,
-    component: lazyView(PageNames.About)
-  },
-  {
     path: '/wallet',
     name: PageNames.Wallet,
     component: lazyView(PageNames.Wallet)
-  },
-  {
-    path: '/bridge',
-    name: PageNames.Bridge,
-    component: lazyView(PageNames.Bridge)
-  },
-  {
-    path: '/bridge/transaction',
-    name: PageNames.BridgeTransaction,
-    component: lazyView(PageNames.BridgeTransaction),
-    meta: { requiresAuth: true }
-  },
-  {
-    path: '/bridge/history',
-    name: PageNames.BridgeTransactionsHistory,
-    component: lazyView(PageNames.BridgeTransactionsHistory),
-    meta: { requiresAuth: true }
   },
   {
     path: '/pool/create-pair',
@@ -76,24 +59,13 @@ const routes: Array<RouteConfig> = [
     meta: { requiresAuth: true }
   },
   {
-    path: '/rewards',
-    name: PageNames.Rewards,
-    component: lazyView(PageNames.Rewards)
-  },
-  {
-    path: '/stats',
-    name: PageNames.Stats
-  },
-  {
-    path: '/support',
-    name: PageNames.Support
+    path: '/kyc',
+    name: PageNames.KYC,
+    component: lazyView(PageNames.KYC)
   },
   {
     path: '*',
-    redirect: '/swap'
-    // TODO: Turn on redirect to PageNotFound
-    // name: PageNames.PageNotFound,
-    // component: lazyComponent(PageNames.PageNotFound)
+    redirect: '/exchange'
   }
 ]
 
@@ -103,15 +75,12 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  if (to.matched.some(record => record.meta.requiresAuth)) {
-    if (BridgeChildPages.includes(to.name as PageNames) && store.getters.isLoggedIn && !store.getters['web3/isExternalAccountConnected']) {
-      next({ name: PageNames.Bridge })
-      return
-    }
-    if (!store.getters.isLoggedIn) {
-      next({ name: PageNames.Wallet })
-      return
-    }
+  if (to.matched.some(record => record.meta.requiresAuth) && !store.getters.isLoggedIn) {
+    next({ name: PageNames.Wallet })
+    return
+  }
+  if ([PageNames.Send, PageNames.Exchange].includes(to.name as PageNames)) {
+    store.dispatch('swap/setIsSendOnly', to.name === PageNames.Send)
   }
   next()
 })
