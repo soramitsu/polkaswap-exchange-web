@@ -35,7 +35,6 @@ const mutations = {
   },
 
   [types.GET_ACCOUNT_LIQUIDITY_SUCCESS] (state, liquidity) {
-    state.accountLiquidity = []
     state.accountLiquidity = liquidity
     state.accountLiquidityFetching = false
   },
@@ -50,7 +49,6 @@ const mutations = {
   },
 
   [types.UPDATE_ACCOUNT_LIQUIDITY_SUCCESS] (state, liquidity) {
-    state.accountLiquidity = []
     state.accountLiquidity = liquidity
     state.accountLiquidityFetching = false
   },

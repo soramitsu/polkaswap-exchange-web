@@ -160,6 +160,7 @@ const TokenPairMixin = CreateTokenPairMixin(namespace)
 
 export default class CreatePair extends Mixins(TokenPairMixin, NumberFormatterMixin) {
   @Action('createPair', { namespace }) createPair
+  @Action('getAssets', { namespace: 'assets' }) getAssets!: AsyncVoidFn
 
   readonly delimiters = FPNumber.DELIMITERS_CONFIG
 

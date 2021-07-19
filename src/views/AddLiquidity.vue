@@ -169,6 +169,7 @@ export default class AddLiquidity extends Mixins(TokenPairMixin, NumberFormatter
   @Action('addLiquidity', { namespace }) addLiquidity
   @Action('resetFocusedField', { namespace }) resetFocusedField
 
+  @Action('getAssets', { namespace: 'assets' }) getAssets!: AsyncVoidFn
   @Action('getAccountLiquidity', { namespace: 'pool' }) getAccountLiquidity!: AsyncVoidFn
   @Action('createAccountLiquiditySubscription', { namespace: 'pool' }) createAccountLiquiditySubscription!: () => Promise<Function>
 

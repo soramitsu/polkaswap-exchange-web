@@ -144,7 +144,7 @@
 
 <script lang="ts">
 import { Component, Mixins, Watch } from 'vue-property-decorator'
-import { Action, Getter } from 'vuex-class'
+import { Action, Getter, State } from 'vuex-class'
 import { FPNumber, KnownSymbols, AccountLiquidity, CodecString } from '@sora-substrate/util'
 
 import TransactionMixin from '@/components/mixins/TransactionMixin'
@@ -172,23 +172,24 @@ export default class RemoveLiquidity extends Mixins(TransactionMixin, ConfirmDia
   readonly KnownSymbols = KnownSymbols
   readonly delimiters = FPNumber.DELIMITERS_CONFIG
 
-  @Getter('focusedField', { namespace }) focusedField!: Nullable<string>
+  @State(state => state[namespace].removePart) removePart!: any
+  @State(state => state[namespace].liquidityAmount) liquidityAmount!: any
+  @State(state => state[namespace].firstTokenAmount) firstTokenAmount!: any
+  @State(state => state[namespace].secondTokenAmount) secondTokenAmount!: any
+  @State(state => state[namespace].fee) fee!: CodecString
+
   @Getter('liquidity', { namespace }) liquidity!: AccountLiquidity
   @Getter('firstToken', { namespace }) firstToken!: any
   @Getter('secondToken', { namespace }) secondToken!: any
-  @Getter('removePart', { namespace }) removePart!: any
   @Getter('liquidityBalance', { namespace }) liquidityBalance!: CodecString
-  @Getter('liquidityAmount', { namespace }) liquidityAmount!: any
-  @Getter('firstTokenAmount', { namespace }) firstTokenAmount!: any
   @Getter('firstTokenBalance', { namespace }) firstTokenBalance!: CodecString
-  @Getter('secondTokenAmount', { namespace }) secondTokenAmount!: any
   @Getter('secondTokenBalance', { namespace }) secondTokenBalance!: CodecString
-  @Getter('fee', { namespace }) fee!: CodecString
   @Getter('tokenXOR', { namespace: 'assets' }) tokenXOR!: any
   @Getter('price', { namespace: 'prices' }) price!: string
   @Getter('priceReversed', { namespace: 'prices' }) priceReversed!: string
 
-  @Action('getLiquidity', { namespace }) getLiquidity
+  @Action('setLiquidity', { namespace }) setLiquidity
+  @Action('getRemoveLiquidityData', { namespace }) getRemoveLiquidityData!: AsyncVoidFn
   @Action('setRemovePart', { namespace }) setRemovePart
   @Action('setLiquidityAmount', { namespace }) setLiquidityAmount
   @Action('setFirstTokenAmount', { namespace }) setFirstTokenAmount
@@ -217,7 +218,7 @@ export default class RemoveLiquidity extends Mixins(TransactionMixin, ConfirmDia
         this.getAccountLiquidity()
       ])
 
-      await this.getLiquidity({
+      await this.setLiquidity({
         firstAddress: this.firstTokenAddress,
         secondAddress: this.secondTokenAddress
       })
@@ -336,10 +337,10 @@ export default class RemoveLiquidity extends Mixins(TransactionMixin, ConfirmDia
     this.handleRemovePartChange(100)
   }
 
-  private updatePrices (): void {
+  private async updatePrices (): Promise<void> {
     const firstTokenBalance = this.getFPNumberFromCodec(this.firstTokenBalance)
     const secondTokenBalance = this.getFPNumberFromCodec(this.secondTokenBalance)
-    this.getPrices({
+    await this.getPrices({
       assetAAddress: this.firstTokenAddress ?? this.firstToken.address,
       assetBAddress: this.secondTokenAddress ?? this.secondToken.address,
       amountA: firstTokenBalance.toString(),
