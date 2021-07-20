@@ -1,6 +1,10 @@
+const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
+
 module.exports = {
   publicPath: './',
   configureWebpack: config => {
+    config.plugins.push(new NodePolyfillPlugin())
+
     // prepare icons content to unicode
     config.module.rules.filter(rule => {
       return rule.test.toString().indexOf('scss') !== -1
