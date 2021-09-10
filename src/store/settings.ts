@@ -27,7 +27,8 @@ const types = flow(
     'RESET_NODE',
     'SET_NETWORK_CHAIN_GENESIS_HASH',
     'SET_SELECT_NODE_DIALOG_VISIBILIY',
-    'SET_LANGUAGE'
+    'SET_LANGUAGE',
+    'SET_API_KEYS'
   ]),
   map(x => [x, x]),
   fromPairs
@@ -37,6 +38,7 @@ const types = flow(
 
 function initialState () {
   return {
+    apiKeys: {},
     slippageTolerance: storage.get('slippageTolerance') || DefaultSlippageTolerance,
     marketAlgorithm: storage.get('marketAlgorithm') || DefaultMarketAlgorithm,
     transactionDeadline: Number(storage.get('transactionDeadline')) || 20,
@@ -134,6 +136,9 @@ const mutations = {
   [types.SET_LANGUAGE] (state, lang: Language) {
     state.language = lang
     settingsStorage.set('language', lang)
+  },
+  [types.SET_API_KEYS] (state, keys = {}) {
+    state.apiKeys = { ...state.apiKeys, ...keys }
   }
 }
 
@@ -150,9 +155,14 @@ const actions = {
 
       // wallet init & update flow
       if (!isWalletLoaded) {
-        await initWallet({ permissions: WalletPermissions })
-        // TODO [tech]: maybe we should replace it, cuz it executes twice except bridge screens
-        await dispatch('assets/getAssets', undefined, { root: true })
+        try {
+          await initWallet({ permissions: WalletPermissions })
+          // TODO [tech]: maybe we should replace it, cuz it executes twice except bridge screens
+          await dispatch('assets/getAssets', undefined, { root: true })
+        } catch (error) {
+          console.error(error)
+          throw error
+        }
       }
     } catch (error) {
       if (requestedNode && (requestedNode.address === state.node.address)) {
@@ -319,6 +329,9 @@ const actions = {
     updateDocumentTitle()
     updateFpNumberLocale(locale)
     commit(types.SET_LANGUAGE, locale)
+  },
+  setApiKeys ({ commit }, keys) {
+    commit(types.SET_API_KEYS, keys)
   }
 }
 

@@ -523,25 +523,32 @@ const actions = {
       commit(types.GET_EVM_NETWORK_FEE_FAILURE)
     }
   },
-  async generateHistoryItem ({ getters, dispatch, rootGetters }, playground) {
-    await dispatch('setHistoryItem', bridgeApi.generateHistoryItem({
+  bridgeDataToHistoryItem ({ getters, rootGetters }, { date = Date.now(), step = 1, to = '', ...restParams } = {}) {
+    return {
       type: getters.isSoraToEvm ? Operation.EthBridgeOutgoing : Operation.EthBridgeIncoming,
       amount: getters.amount,
       symbol: getters.asset.symbol,
       assetAddress: getters.asset.address,
-      startTime: playground.date,
-      endTime: playground.date,
+      startTime: date,
+      endTime: date,
       signed: false,
       status: '',
-      transactionStep: playground.step,
+      transactionStep: step,
       hash: '',
       ethereumHash: '',
       transactionState: STATES.INITIAL,
       soraNetworkFee: getters.soraNetworkFee,
       ethereumNetworkFee: getters.evmNetworkFee,
       externalNetwork: rootGetters['web3/evmNetwork'],
-      to: rootGetters['web3/evmAddress']
-    }))
+      to: to || rootGetters['web3/evmAddress'],
+      ...restParams
+    }
+  },
+  async generateHistoryItem ({ getters, dispatch }, playground) {
+    const historyItem = await dispatch('bridgeDataToHistoryItem', playground)
+
+    await dispatch('setHistoryItem', bridgeApi.generateHistoryItem(historyItem))
+
     return getters.historyItem
   },
   async updateHistoryParams ({ dispatch }, params) {

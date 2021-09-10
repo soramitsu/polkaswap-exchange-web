@@ -92,7 +92,8 @@ export enum PageNames {
   Bridge = 'Bridge',
   BridgeTransaction = 'BridgeTransaction',
   BridgeTransactionsHistory = 'BridgeTransactionsHistory',
-  Tokens = 'Tokens'
+  Tokens = 'Tokens',
+  MoonpayHistory = 'MoonpayHistory'
 }
 
 export enum Components {
@@ -129,7 +130,12 @@ export enum Components {
   TokenSelectButton = 'Input/TokenSelectButton',
   TokenAddress = 'Input/TokenAddress',
   SelectLanguageDialog = 'SelectLanguageDialog',
-  ValueStatusWrapper = 'ValueStatusWrapper'
+  ValueStatusWrapper = 'ValueStatusWrapper',
+  Moonpay = 'Moonpay/Moonpay',
+  MoonpayWidget = 'Moonpay/MoonpayWidget',
+  MoonpayNotification = 'Moonpay/MoonpayNotification',
+  MoonpayConfirmation = 'Moonpay/MoonpayConfirmation',
+  MoonpayHistoryButton = 'Moonpay/MoonpayHistoryButton'
 }
 
 interface SidebarMenuItem {
@@ -297,3 +303,4 @@ export const EthereumGasLimits = [
 ]
 
 export const MaxUint256 = '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
+export const EthAddress = '0x0000000000000000000000000000000000000000'
